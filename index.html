@@ -1,0 +1,2662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GYM ATLAS — Complete Exercise Encyclopedia</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: #222222;
+    --accent: #e8ff00;
+    --accent2: #ff4d1a;
+    --accent3: #00d4ff;
+    --text: #f0f0f0;
+    --muted: #666666;
+    --push: #ff4d1a;
+    --pull: #00d4ff;
+    --legs: #a855f7;
+    --core: #22c55e;
+    --fullbody: #f59e0b;
+    --cardio: #ec4899;
+    --isolation: #64748b;
+    --sidebar-w: 260px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===================== HEADER ===================== */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem 0 calc(var(--sidebar-w) + 1.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 4px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .logo span { color: var(--text); }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* Music Button */
+  #musicBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0.45rem 0.9rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  #musicBtn:hover { border-color: var(--accent); color: var(--accent); }
+  #musicBtn.playing { border-color: var(--accent); color: var(--accent); animation: pulseBorder 1.5s infinite; }
+  @keyframes pulseBorder {
+    0%,100% { box-shadow: 0 0 0 0 rgba(232,255,0,0.3); }
+    50% { box-shadow: 0 0 0 4px rgba(232,255,0,0.1); }
+  }
+
+  .music-icon { font-size: 1rem; }
+  .music-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 14px;
+  }
+  .music-bars span {
+    display: block;
+    width: 3px;
+    background: var(--accent);
+    border-radius: 1px;
+    animation: none;
+  }
+  .playing .music-bars span:nth-child(1) { animation: bar 0.8s 0s ease-in-out infinite alternate; }
+  .playing .music-bars span:nth-child(2) { animation: bar 0.8s 0.2s ease-in-out infinite alternate; }
+  .playing .music-bars span:nth-child(3) { animation: bar 0.8s 0.4s ease-in-out infinite alternate; }
+  @keyframes bar {
+    from { height: 4px; }
+    to { height: 14px; }
+  }
+  .music-bars span { height: 4px; }
+
+  /* Search in header */
+  .search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 400px;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 0.75rem;
+    color: var(--muted);
+  }
+  #searchInput {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.55rem 0.9rem 0.55rem 2.5rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #searchInput:focus { border-color: var(--accent); }
+  #searchInput::placeholder { color: var(--muted); }
+
+  /* ===================== SIDEBAR ===================== */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-top: 64px;
+  }
+
+  .sidebar-section {
+    padding: 1.25rem 1.25rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .sidebar nav a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .sidebar nav a:hover { background: var(--surface2); border-color: currentColor; }
+  .sidebar nav a.push { color: var(--push); }
+  .sidebar nav a.pull { color: var(--pull); }
+  .sidebar nav a.legs { color: var(--legs); }
+  .sidebar nav a.core { color: var(--core); }
+  .sidebar nav a.fullbody { color: var(--fullbody); }
+  .sidebar nav a.cardio { color: var(--cardio); }
+  .sidebar nav a.isolation { color: var(--isolation); }
+  .sidebar nav a .dot-indicator {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* Muscle Group Filter Buttons */
+  .muscle-filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+  }
+
+  .muscle-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 0.4rem 0.3rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .muscle-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .muscle-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+
+  /* ===================== MAIN LAYOUT ===================== */
+  .main-wrap {
+    margin-left: var(--sidebar-w);
+    margin-top: 64px;
+    min-height: calc(100vh - 64px);
+  }
+
+  /* ===================== HERO ===================== */
+  .hero {
+    height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 120%, rgba(232,255,0,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 20% 30%, rgba(255,77,26,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse 40% 40% at 80% 20%, rgba(0,212,255,0.08) 0%, transparent 50%);
+  }
+
+  .grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 12vw, 12rem);
+    line-height: 0.85;
+    letter-spacing: -2px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero h1 .outline {
+    -webkit-text-stroke: 1px rgba(240,240,240,0.3);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 300;
+    margin-top: 2rem;
+    max-width: 440px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--accent); line-height: 1; }
+  .stat-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; font-family: 'Space Mono', monospace; }
+
+  .hero-cta {
+    margin-top: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+  .cta-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    padding: 0.9rem 2.5rem;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .cta-btn:hover { background: #fff; transform: translateY(-2px); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===================== PROFILE & BMI SECTION ===================== */
+  .profile-section {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2.5rem;
+  }
+
+  .profile-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .profile-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+
+  .profile-subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-group label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .form-group input, .form-group select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 0.6rem 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+  .form-group select option { background: var(--surface2); }
+
+  .profile-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    padding: 0.7rem 1.8rem;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: #fff; }
+
+  /* BMI Result */
+  #bmiResult {
+    display: none;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .bmi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .bmi-card {
+    text-align: center;
+  }
+
+  .bmi-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .bmi-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .bmi-cat {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    padding: 0.35rem 0.8rem;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 0.4rem;
+  }
+
+  /* Weight Goal */
+  #weightGoalSection {
+    display: none;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .goal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+
+  .goal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    align-items: end;
+  }
+
+  #goalPlan {
+    display: none;
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    background: rgba(232,255,0,0.05);
+    border: 1px solid rgba(232,255,0,0.2);
+    border-radius: 6px;
+  }
+
+  .plan-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .plan-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  .plan-item:last-child { border-bottom: none; }
+  .plan-item span:first-child { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; }
+  .plan-item strong { color: var(--accent); }
+
+  /* ===================== MUSCLE TARGET SECTION ===================== */
+  .muscle-target-section {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2.5rem;
+  }
+
+  .muscle-target-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .target-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 3px;
+    color: var(--accent3);
+    margin-bottom: 0.5rem;
+  }
+
+  .target-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+
+  .target-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0.9rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .target-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+  .target-btn.active { background: var(--accent3); color: #000; border-color: var(--accent3); font-weight: 700; }
+
+  #filteredExercises {
+    display: none;
+  }
+
+  .filtered-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 3px;
+    color: var(--accent3);
+    margin: 1.5rem 0 1rem;
+  }
+
+  /* ===================== SECTION ===================== */
+  .section {
+    padding: 5rem 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4.5rem;
+    line-height: 1;
+    opacity: 0.1;
+    color: var(--text);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 3px;
+    line-height: 1;
+  }
+
+  .section-badge {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  /* ===================== EXERCISE GRID ===================== */
+  .exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .exercise-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+
+  .exercise-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .card-animation {
+    width: 100%;
+    height: 190px;
+    background: var(--surface2);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-animation::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .card-body { padding: 1.1rem; }
+  .card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.2rem;
+  }
+  .card-muscles {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.85rem;
+  }
+  .card-desc {
+    font-size: 0.82rem;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 0.9rem;
+  }
+  .card-meta {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .meta-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    padding: 0.22rem 0.55rem;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid;
+    opacity: 0.7;
+  }
+  .difficulty {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.65rem;
+  }
+  .difficulty-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-right: 0.25rem;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+  .dot.filled { background: var(--accent); }
+
+  /* Category colors */
+  .push .exercise-card:hover { border-color: var(--push); box-shadow: 0 20px 60px rgba(255,77,26,0.15); }
+  .push .card-animation { background: linear-gradient(135deg, #1a0a05, #111); }
+  .push .section-title { color: var(--push); }
+  .push .section-badge { background: rgba(255,77,26,0.1); color: var(--push); border: 1px solid rgba(255,77,26,0.3); }
+  .push .meta-chip { color: var(--push); border-color: rgba(255,77,26,0.3); }
+
+  .pull .exercise-card:hover { border-color: var(--pull); box-shadow: 0 20px 60px rgba(0,212,255,0.15); }
+  .pull .card-animation { background: linear-gradient(135deg, #051015, #111); }
+  .pull .section-title { color: var(--pull); }
+  .pull .section-badge { background: rgba(0,212,255,0.1); color: var(--pull); border: 1px solid rgba(0,212,255,0.3); }
+  .pull .meta-chip { color: var(--pull); border-color: rgba(0,212,255,0.3); }
+
+  .legs .exercise-card:hover { border-color: var(--legs); box-shadow: 0 20px 60px rgba(168,85,247,0.15); }
+  .legs .card-animation { background: linear-gradient(135deg, #0d0515, #111); }
+  .legs .section-title { color: var(--legs); }
+  .legs .section-badge { background: rgba(168,85,247,0.1); color: var(--legs); border: 1px solid rgba(168,85,247,0.3); }
+  .legs .meta-chip { color: var(--legs); border-color: rgba(168,85,247,0.3); }
+
+  .core .exercise-card:hover { border-color: var(--core); box-shadow: 0 20px 60px rgba(34,197,94,0.15); }
+  .core .card-animation { background: linear-gradient(135deg, #020f05, #111); }
+  .core .section-title { color: var(--core); }
+  .core .section-badge { background: rgba(34,197,94,0.1); color: var(--core); border: 1px solid rgba(34,197,94,0.3); }
+  .core .meta-chip { color: var(--core); border-color: rgba(34,197,94,0.3); }
+
+  .fullbody .exercise-card:hover { border-color: var(--fullbody); box-shadow: 0 20px 60px rgba(245,158,11,0.15); }
+  .fullbody .card-animation { background: linear-gradient(135deg, #150c00, #111); }
+  .fullbody .section-title { color: var(--fullbody); }
+  .fullbody .section-badge { background: rgba(245,158,11,0.1); color: var(--fullbody); border: 1px solid rgba(245,158,11,0.3); }
+  .fullbody .meta-chip { color: var(--fullbody); border-color: rgba(245,158,11,0.3); }
+
+  .cardio .exercise-card:hover { border-color: var(--cardio); box-shadow: 0 20px 60px rgba(236,72,153,0.15); }
+  .cardio .card-animation { background: linear-gradient(135deg, #150514, #111); }
+  .cardio .section-title { color: var(--cardio); }
+  .cardio .section-badge { background: rgba(236,72,153,0.1); color: var(--cardio); border: 1px solid rgba(236,72,153,0.3); }
+  .cardio .meta-chip { color: var(--cardio); border-color: rgba(236,72,153,0.3); }
+
+  .isolation .exercise-card:hover { border-color: var(--isolation); box-shadow: 0 20px 60px rgba(100,116,139,0.15); }
+  .isolation .card-animation { background: linear-gradient(135deg, #080b0e, #111); }
+  .isolation .section-title { color: var(--isolation); }
+  .isolation .section-badge { background: rgba(100,116,139,0.1); color: var(--isolation); border: 1px solid rgba(100,116,139,0.3); }
+  .isolation .meta-chip { color: var(--isolation); border-color: rgba(100,116,139,0.3); }
+
+  /* SVG glows */
+  .anim-svg { width: 155px; height: 155px; }
+  .glow-push { filter: drop-shadow(0 0 8px rgba(255,77,26,0.5)); }
+  .glow-pull { filter: drop-shadow(0 0 8px rgba(0,212,255,0.5)); }
+  .glow-legs { filter: drop-shadow(0 0 8px rgba(168,85,247,0.5)); }
+  .glow-core { filter: drop-shadow(0 0 8px rgba(34,197,94,0.5)); }
+  .glow-full { filter: drop-shadow(0 0 8px rgba(245,158,11,0.5)); }
+  .glow-cardio { filter: drop-shadow(0 0 8px rgba(236,72,153,0.5)); }
+  .glow-iso { filter: drop-shadow(0 0 8px rgba(100,116,139,0.5)); }
+
+  .section-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  footer {
+    padding: 2.5rem 2rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    margin-left: var(--sidebar-w);
+  }
+  footer p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Animation keyframes */
+  @keyframes pushup { 0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)} }
+  @keyframes press { 0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.85)} }
+  @keyframes curl { 0%,100%{transform:rotate(0deg)}50%{transform:rotate(-40deg)} }
+  @keyframes squat { 0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(12px) scaleY(0.85)} }
+  @keyframes swing { 0%,100%{transform:rotate(-20deg)}50%{transform:rotate(20deg)} }
+  @keyframes run { 0%,100%{transform:translateX(-5px)}50%{transform:translateX(5px)} }
+  @keyframes plank-pulse { 0%,100%{opacity:1}50%{opacity:0.6} }
+  @keyframes bounce { 0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)} }
+  @keyframes pulse-glow { 0%,100%{opacity:0.6}50%{opacity:1} }
+  @keyframes rotate { from{transform:rotate(0deg)}to{transform:rotate(360deg)} }
+  @keyframes kickback { 0%,100%{transform:rotate(0deg)}50%{transform:rotate(30deg)} }
+  @keyframes row { 0%,100%{transform:translateX(0)}50%{transform:translateX(-15px)} }
+  @keyframes crunch { 0%,100%{transform:rotate(0deg)}50%{transform:rotate(-25deg)} }
+  @keyframes rope { 0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(5px) rotate(5deg)} }
+  @keyframes battle { 0%{transform:translateY(0) rotate(-10deg)}25%{transform:translateY(-10px) rotate(0)}50%{transform:translateY(0) rotate(10deg)}75%{transform:translateY(10px) rotate(0)}100%{transform:translateY(0) rotate(-10deg)} }
+  @keyframes pedal { from{transform:rotate(0deg)}to{transform:rotate(360deg)} }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    :root { --sidebar-w: 0px; }
+    .sidebar { display: none; }
+    header { padding: 0 1rem; }
+    .hero h1 { font-size: 5rem; }
+    .exercise-grid { grid-template-columns: 1fr; }
+    footer { margin-left: 0; }
+  }
+
+  /* Scroll animations */
+  .exercise-card {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
+  }
+
+  /* No results */
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    grid-column: 1/-1;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header>
+  <div class="logo">GYM<span>ATLAS</span></div>
+  <div class="search-wrap">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" placeholder="Search exercises, muscles...">
+  </div>
+  <div class="header-right">
+    <button id="musicBtn" onclick="toggleMusic()">
+      <span class="music-icon">🎵</span>
+      <span id="musicLabel">PLAY MUSIC</span>
+      <div class="music-bars">
+        <span></span><span></span><span></span>
+      </div>
+    </button>
+  </div>
+</header>
+
+<!-- ===================== SIDEBAR ===================== -->
+<div class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Exercise Categories</div>
+    <nav>
+      <a href="#push" class="push"><span class="dot-indicator"></span> Push</a>
+      <a href="#pull" class="pull"><span class="dot-indicator"></span> Pull</a>
+      <a href="#legs" class="legs"><span class="dot-indicator"></span> Legs</a>
+      <a href="#core" class="core"><span class="dot-indicator"></span> Core</a>
+      <a href="#fullbody" class="fullbody"><span class="dot-indicator"></span> Full Body</a>
+      <a href="#cardio" class="cardio"><span class="dot-indicator"></span> Cardio</a>
+      <a href="#isolation" class="isolation"><span class="dot-indicator"></span> Isolation</a>
+    </nav>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Quick Jump</div>
+    <nav>
+      <a href="#profile-section" style="color:var(--accent)"><span class="dot-indicator" style="background:var(--accent)"></span> My Profile & BMI</a>
+      <a href="#target-section" style="color:var(--accent3)"><span class="dot-indicator" style="background:var(--accent3)"></span> Build Muscle Target</a>
+    </nav>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Filter by Muscle</div>
+    <div class="muscle-filter-grid" id="sidebarMuscleFilter">
+      <button class="muscle-btn" data-muscle="chest" onclick="filterByMuscle(this)">Chest</button>
+      <button class="muscle-btn" data-muscle="back" onclick="filterByMuscle(this)">Back</button>
+      <button class="muscle-btn" data-muscle="shoulders" onclick="filterByMuscle(this)">Shoulders</button>
+      <button class="muscle-btn" data-muscle="biceps" onclick="filterByMuscle(this)">Biceps</button>
+      <button class="muscle-btn" data-muscle="triceps" onclick="filterByMuscle(this)">Triceps</button>
+      <button class="muscle-btn" data-muscle="quads" onclick="filterByMuscle(this)">Quads</button>
+      <button class="muscle-btn" data-muscle="hamstrings" onclick="filterByMuscle(this)">Hamstrings</button>
+      <button class="muscle-btn" data-muscle="glutes" onclick="filterByMuscle(this)">Glutes</button>
+      <button class="muscle-btn" data-muscle="calves" onclick="filterByMuscle(this)">Calves</button>
+      <button class="muscle-btn" data-muscle="core" onclick="filterByMuscle(this)">Core/Abs</button>
+      <button class="muscle-btn" data-muscle="cardio" onclick="filterByMuscle(this)">Cardio</button>
+      <button class="muscle-btn" onclick="clearMuscleFilter(this)">All ✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<div class="main-wrap">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="grid-lines"></div>
+  <div class="hero-tag">Complete Exercise Encyclopedia</div>
+  <h1>
+    MASTER<br>
+    <span class="outline">YOUR</span><br>
+    BODY
+  </h1>
+  <p class="hero-sub">Every exercise. Every muscle. Every rep. Your ultimate guide to building strength, power, and endurance.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Exercises</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">7</div>
+      <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Gains</div>
+    </div>
+  </div>
+  <div class="hero-cta">
+    <button class="cta-btn" onclick="document.getElementById('profile-section').scrollIntoView({behavior:'smooth'})">START YOUR JOURNEY ↓</button>
+  </div>
+</section>
+
+<!-- ===================== PROFILE & BMI SECTION ===================== -->
+<div class="profile-section" id="profile-section">
+  <div class="profile-inner">
+    <div class="profile-title">YOUR PROFILE</div>
+    <div class="profile-subtitle">Enter your details to calculate BMI and get a personalized plan</div>
+
+    <div class="profile-grid">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="userName" placeholder="e.g. Ahmed">
+      </div>
+      <div class="form-group">
+        <label>Age (years)</label>
+        <input type="number" id="userAge" placeholder="e.g. 22" min="10" max="100">
+      </div>
+      <div class="form-group">
+        <label>Height (cm)</label>
+        <input type="number" id="userHeight" placeholder="e.g. 175" min="100" max="250">
+      </div>
+      <div class="form-group">
+        <label>Current Weight (kg)</label>
+        <input type="number" id="userWeight" placeholder="e.g. 70" min="30" max="300">
+      </div>
+      <div class="form-group">
+        <label>Gender</label>
+        <select id="userGender">
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other / Prefer not to say</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <button class="btn-primary" onclick="calculateBMI()">CALCULATE BMI</button>
+    </div>
+
+    <!-- BMI Result -->
+    <div id="bmiResult">
+      <div class="bmi-grid">
+        <div class="bmi-card">
+          <div class="bmi-value" id="bmiValue">—</div>
+          <div class="bmi-label">BMI Score</div>
+          <div class="bmi-cat" id="bmiCat"></div>
+        </div>
+        <div class="bmi-card">
+          <div class="bmi-value" id="idealWeight" style="font-size:2rem">—</div>
+          <div class="bmi-label">Ideal Weight Range (kg)</div>
+        </div>
+        <div class="bmi-card">
+          <div class="bmi-value" id="tdeeValue" style="font-size:2rem">—</div>
+          <div class="bmi-label">Est. Daily Calories (TDEE)</div>
+        </div>
+        <div class="bmi-card">
+          <div class="bmi-value" id="greetName" style="font-size:1.5rem; color: var(--accent)">—</div>
+          <div class="bmi-label">Welcome, Athlete!</div>
+        </div>
+      </div>
+
+      <!-- Weight Goal -->
+      <div id="weightGoalSection">
+        <div class="goal-title">⚡ WEIGHT GAIN PLAN</div>
+        <div class="goal-grid">
+          <div class="form-group">
+            <label>Target Weight (kg)</label>
+            <input type="number" id="targetWeight" placeholder="e.g. 80" min="30" max="300">
+          </div>
+          <div class="form-group">
+            <label>Timeline</label>
+            <select id="goalTimeline">
+              <option value="3">3 Months (Aggressive)</option>
+              <option value="6" selected>6 Months (Optimal)</option>
+              <option value="12">12 Months (Gradual)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button class="btn-primary" onclick="calcWeightGoal()">GENERATE PLAN</button>
+          </div>
+        </div>
+
+        <div id="goalPlan">
+          <div class="plan-heading">YOUR PERSONALIZED PLAN</div>
+          <div class="plan-item"><span>Weight to Gain</span><strong id="planGain">—</strong></div>
+          <div class="plan-item"><span>Timeline</span><strong id="planTime">—</strong></div>
+          <div class="plan-item"><span>Weekly Gain Target</span><strong id="planWeekly">—</strong></div>
+          <div class="plan-item"><span>Daily Caloric Surplus</span><strong id="planCalories">—</strong></div>
+          <div class="plan-item"><span>Daily Protein Target</span><strong id="planProtein">—</strong></div>
+          <div class="plan-item"><span>Recommended Training</span><strong id="planTraining">—</strong></div>
+          <div class="plan-item"><span>Sleep Recommendation</span><strong id="planSleep">7–9 hours/night</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MUSCLE TARGET SECTION ===================== -->
+<div class="muscle-target-section" id="target-section">
+  <div class="muscle-target-inner">
+    <div class="target-title">WHAT DO YOU WANT TO BUILD?</div>
+    <div class="profile-subtitle">Select a muscle group to see all relevant exercises</div>
+
+    <div class="target-grid">
+      <button class="target-btn" data-target="chest" onclick="showTargetExercises(this)">💪 Chest</button>
+      <button class="target-btn" data-target="back" onclick="showTargetExercises(this)">🔷 Back / Lats</button>
+      <button class="target-btn" data-target="shoulders" onclick="showTargetExercises(this)">🏋️ Shoulders</button>
+      <button class="target-btn" data-target="biceps" onclick="showTargetExercises(this)">🦾 Biceps</button>
+      <button class="target-btn" data-target="triceps" onclick="showTargetExercises(this)">⚡ Triceps</button>
+      <button class="target-btn" data-target="quads" onclick="showTargetExercises(this)">🦵 Quads</button>
+      <button class="target-btn" data-target="hamstrings" onclick="showTargetExercises(this)">🦿 Hamstrings</button>
+      <button class="target-btn" data-target="glutes" onclick="showTargetExercises(this)">🍑 Glutes</button>
+      <button class="target-btn" data-target="calves" onclick="showTargetExercises(this)">🏃 Calves</button>
+      <button class="target-btn" data-target="core" onclick="showTargetExercises(this)">🔥 Core / Abs</button>
+      <button class="target-btn" data-target="cardio" onclick="showTargetExercises(this)">❤️ Cardio</button>
+      <button class="target-btn" data-target="fullbody" onclick="showTargetExercises(this)">⚔️ Full Body</button>
+    </div>
+
+    <div id="filteredExercises">
+      <div class="filtered-header" id="filteredTitle">EXERCISES FOR CHEST</div>
+      <div class="exercise-grid" id="filteredGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 1. PUSH ===== -->
+<section class="section push" id="push">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div class="section-title">PUSH</div>
+    <div class="section-badge">Chest · Shoulders · Triceps</div>
+  </div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card" data-search="push-ups chest triceps shoulders bodyweight" data-muscles="chest,triceps,shoulders">
+      <div class="card-animation">
+        <svg class="anim-svg glow-push" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: pushup 1.5s ease-in-out infinite;">
+            <circle cx="80" cy="55" r="10" fill="none" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="65" x2="80" y2="100" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="75" x2="50" y2="95" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="50" y1="95" x2="50" y2="115" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="75" x2="110" y2="95" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="110" y1="95" x2="110" y2="115" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="100" x2="60" y2="115" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="100" x2="100" y2="115" stroke="#ff4d1a" stroke-width="2.5"/>
+          </g>
+          <line x1="20" y1="120" x2="140" y2="120" stroke="#333" stroke-width="1"/>
+          <text x="80" y="140" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">PUSH-UP</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Push-Ups</div>
+        <div class="card-muscles">Primary: Chest · Triceps · Anterior Deltoid</div>
+        <div class="card-desc">The foundational bodyweight pressing movement. Lower your chest to the floor under control, then push explosively. Variations: wide, narrow, diamond, decline, pike, and archer push-ups.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3–5 Sets</span>
+          <span class="meta-chip">10–25 Reps</span>
+          <span class="meta-chip">Bodyweight</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="bench press chest flat incline decline barbell" data-muscles="chest,triceps,shoulders">
+      <div class="card-animation">
+        <svg class="anim-svg glow-push" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="100" width="100" height="8" rx="3" fill="#333"/>
+          <line x1="40" y1="108" x2="40" y2="125" stroke="#333" stroke-width="3"/>
+          <line x1="120" y1="108" x2="120" y2="125" stroke="#333" stroke-width="3"/>
+          <circle cx="80" cy="85" r="10" fill="none" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="95" x2="80" y2="102" stroke="#ff4d1a" stroke-width="2.5"/>
+          <g style="animation: press 1.8s ease-in-out infinite;">
+            <line x1="80" y1="95" x2="55" y2="75" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="95" x2="105" y2="75" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="35" y1="70" x2="125" y2="70" stroke="#ff4d1a" stroke-width="3"/>
+            <circle cx="35" cy="70" r="6" fill="none" stroke="#ff4d1a" stroke-width="2"/>
+            <circle cx="125" cy="70" r="6" fill="none" stroke="#ff4d1a" stroke-width="2"/>
+          </g>
+          <line x1="80" y1="102" x2="65" y2="118" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="102" x2="95" y2="118" stroke="#ff4d1a" stroke-width="2.5"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">BENCH PRESS</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Bench Press</div>
+        <div class="card-muscles">Primary: Pectoralis Major · Secondary: Triceps, Deltoid</div>
+        <div class="card-desc">King of chest exercises. Lie on bench, lower barbell to mid-chest with elbows at ~45°, press explosively. Flat targets mid-chest, incline hits upper chest, decline emphasizes lower fibers.</div>
+        <div class="card-meta">
+          <span class="meta-chip">4 Sets</span>
+          <span class="meta-chip">6–12 Reps</span>
+          <span class="meta-chip">Barbell</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="dumbbell press chest shoulders" data-muscles="chest,triceps,shoulders">
+      <div class="card-animation">
+        <svg class="anim-svg glow-push" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="100" width="100" height="8" rx="3" fill="#333"/>
+          <line x1="40" y1="108" x2="40" y2="125" stroke="#333" stroke-width="3"/>
+          <line x1="120" y1="108" x2="120" y2="125" stroke="#333" stroke-width="3"/>
+          <circle cx="80" cy="85" r="10" fill="none" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="95" x2="80" y2="102" stroke="#ff4d1a" stroke-width="2.5"/>
+          <g style="animation: press 1.8s ease-in-out infinite;">
+            <line x1="80" y1="95" x2="52" y2="75" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="95" x2="108" y2="75" stroke="#ff4d1a" stroke-width="2.5"/>
+            <rect x="42" y="70" width="18" height="8" rx="2" fill="none" stroke="#ff4d1a" stroke-width="2"/>
+            <rect x="100" y="70" width="18" height="8" rx="2" fill="none" stroke="#ff4d1a" stroke-width="2"/>
+          </g>
+          <line x1="80" y1="102" x2="65" y2="118" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="102" x2="95" y2="118" stroke="#ff4d1a" stroke-width="2.5"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">DB PRESS</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Dumbbell Press</div>
+        <div class="card-muscles">Primary: Pectoralis Major · Triceps · Anterior Deltoid</div>
+        <div class="card-desc">Greater range of motion than barbell. Each arm works independently, preventing strength imbalances. Allows natural wrist rotation for joint-friendly pressing. Excellent for chest development and symmetry.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3–4 Sets</span>
+          <span class="meta-chip">8–15 Reps</span>
+          <span class="meta-chip">Dumbbell</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="chest fly dumbbell cable isolation" data-muscles="chest,shoulders">
+      <div class="card-animation">
+        <svg class="anim-svg glow-push" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="100" width="100" height="8" rx="3" fill="#333"/>
+          <circle cx="80" cy="85" r="10" fill="none" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="95" x2="80" y2="102" stroke="#ff4d1a" stroke-width="2.5"/>
+          <g style="animation: swing 2s ease-in-out infinite;">
+            <line x1="80" y1="90" x2="45" y2="80" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="90" x2="115" y2="80" stroke="#ff4d1a" stroke-width="2.5"/>
+            <circle cx="43" cy="80" r="5" fill="none" stroke="#ff4d1a" stroke-width="2"/>
+            <circle cx="117" cy="80" r="5" fill="none" stroke="#ff4d1a" stroke-width="2"/>
+          </g>
+          <line x1="80" y1="102" x2="65" y2="118" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="102" x2="95" y2="118" stroke="#ff4d1a" stroke-width="2.5"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">CHEST FLY</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Chest Fly</div>
+        <div class="card-muscles">Primary: Pectoralis Major · Secondary: Anterior Deltoid</div>
+        <div class="card-desc">Pure chest isolation. Arc the arms wide to stretch the chest fully, then squeeze together at the top. Cable version provides constant tension throughout the movement for superior hypertrophy stimulus.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">12–15 Reps</span>
+          <span class="meta-chip">Isolation</span>
+          <span class="meta-chip">Dumbbell/Cable</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="shoulder press overhead press deltoid" data-muscles="shoulders,triceps">
+      <div class="card-animation">
+        <svg class="anim-svg glow-push" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="60" r="10" fill="none" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="70" x2="80" y2="108" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="108" x2="65" y2="130" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="108" x2="95" y2="130" stroke="#ff4d1a" stroke-width="2.5"/>
+          <g style="animation: press 1.5s ease-in-out infinite;">
+            <line x1="80" y1="78" x2="48" y2="68" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="78" x2="112" y2="68" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="35" y1="60" x2="125" y2="60" stroke="#ff4d1a" stroke-width="3"/>
+            <circle cx="35" cy="60" r="5" fill="none" stroke="#ff4d1a" stroke-width="2"/>
+            <circle cx="125" cy="60" r="5" fill="none" stroke="#ff4d1a" stroke-width="2"/>
+          </g>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">SHOULDER PRESS</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Shoulder Press (OHP)</div>
+        <div class="card-muscles">Primary: Deltoids · Secondary: Triceps, Upper Traps</div>
+        <div class="card-desc">The overhead press is the definitive shoulder builder. Press bar or dumbbells from shoulder height to full lockout overhead. Engages all three deltoid heads and builds impressive shoulder width.</div>
+        <div class="card-meta">
+          <span class="meta-chip">4 Sets</span>
+          <span class="meta-chip">6–12 Reps</span>
+          <span class="meta-chip">Barbell/DB</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="lateral raises side delts shoulders" data-muscles="shoulders">
+      <div class="card-animation">
+        <svg class="anim-svg glow-push" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="55" r="10" fill="none" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="65" x2="80" y2="103" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="103" x2="65" y2="128" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="103" x2="95" y2="128" stroke="#ff4d1a" stroke-width="2.5"/>
+          <g style="animation: swing 1.5s ease-in-out infinite;">
+            <line x1="80" y1="75" x2="42" y2="65" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="75" x2="118" y2="65" stroke="#ff4d1a" stroke-width="2.5"/>
+            <circle cx="40" cy="65" r="5" fill="none" stroke="#ff4d1a" stroke-width="2"/>
+            <circle cx="120" cy="65" r="5" fill="none" stroke="#ff4d1a" stroke-width="2"/>
+          </g>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">LATERAL RAISE</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Lateral Raises</div>
+        <div class="card-muscles">Primary: Lateral (Medial) Deltoid · Secondary: Supraspinatus</div>
+        <div class="card-desc">The key exercise for building shoulder width. Raise dumbbells to shoulder height with a slight forward lean and slight elbow bend. Lead with elbows, keep a controlled descent. Essential for that 3D shoulder look.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3–4 Sets</span>
+          <span class="meta-chip">12–20 Reps</span>
+          <span class="meta-chip">Dumbbell</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="dips triceps chest bodyweight parallel bars" data-muscles="triceps,chest,shoulders">
+      <div class="card-animation">
+        <svg class="anim-svg glow-push" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="35" y1="60" x2="35" y2="130" stroke="#333" stroke-width="3"/>
+          <line x1="125" y1="60" x2="125" y2="130" stroke="#333" stroke-width="3"/>
+          <g style="animation: pushup 1.8s ease-in-out infinite;">
+            <circle cx="80" cy="55" r="10" fill="none" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="65" x2="80" y2="95" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="72" x2="47" y2="72" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="47" y1="60" x2="47" y2="80" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="72" x2="113" y2="72" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="113" y1="60" x2="113" y2="80" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="95" x2="70" y2="115" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="80" y1="95" x2="90" y2="115" stroke="#ff4d1a" stroke-width="2.5"/>
+          </g>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">DIPS</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Dips</div>
+        <div class="card-muscles">Primary: Triceps, Lower Chest · Secondary: Anterior Deltoid</div>
+        <div class="card-desc">Compound bodyweight push. Upright torso targets triceps more; leaning forward shifts load to lower chest. Lower until shoulders are below elbows, then press up. Add weight via belt for progressive overload.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3–4 Sets</span>
+          <span class="meta-chip">8–15 Reps</span>
+          <span class="meta-chip">Bodyweight</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="triceps pushdown cable isolation arm" data-muscles="triceps">
+      <div class="card-animation">
+        <svg class="anim-svg glow-push" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="80" y1="20" x2="80" y2="45" stroke="#555" stroke-width="2" stroke-dasharray="4,3"/>
+          <circle cx="80" cy="55" r="10" fill="none" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="65" x2="80" y2="105" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="105" x2="65" y2="130" stroke="#ff4d1a" stroke-width="2.5"/>
+          <line x1="80" y1="105" x2="95" y2="130" stroke="#ff4d1a" stroke-width="2.5"/>
+          <g style="animation: kickback 1.5s ease-in-out infinite; transform-origin: 80px 78px;">
+            <line x1="80" y1="78" x2="60" y2="68" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="60" y1="68" x2="55" y2="95" stroke="#ff4d1a" stroke-width="2.5"/>
+            <circle cx="55" cy="97" r="4" fill="#ff4d1a"/>
+          </g>
+          <g style="animation: kickback 1.5s ease-in-out infinite reverse; transform-origin: 80px 78px;">
+            <line x1="80" y1="78" x2="100" y2="68" stroke="#ff4d1a" stroke-width="2.5"/>
+            <line x1="100" y1="68" x2="105" y2="95" stroke="#ff4d1a" stroke-width="2.5"/>
+            <circle cx="105" cy="97" r="4" fill="#ff4d1a"/>
+          </g>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">TRICEP PUSHDOWN</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Triceps Pushdown</div>
+        <div class="card-muscles">Primary: Triceps Brachii (all 3 heads)</div>
+        <div class="card-desc">Cable machine staple for arm development. Keep elbows pinned to sides, extend forearms down until lockout, squeeze hard. Use rope attachment for outer head emphasis or straight bar for overall mass.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">12–15 Reps</span>
+          <span class="meta-chip">Cable</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ===== 2. PULL ===== -->
+<section class="section pull" id="pull">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div class="section-title">PULL</div>
+    <div class="section-badge">Back · Biceps · Rear Delts</div>
+  </div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card" data-search="pull-ups chin-ups back biceps bodyweight lat" data-muscles="back,biceps,shoulders">
+      <div class="card-animation">
+        <svg class="anim-svg glow-pull" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="30" y1="25" x2="130" y2="25" stroke="#555" stroke-width="4"/>
+          <g style="animation: pushup 2s ease-in-out infinite;">
+            <line x1="80" y1="25" x2="65" y2="35" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="25" x2="95" y2="35" stroke="#00d4ff" stroke-width="2.5"/>
+            <circle cx="80" cy="50" r="10" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="60" x2="80" y2="95" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="95" x2="70" y2="118" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="95" x2="90" y2="118" stroke="#00d4ff" stroke-width="2.5"/>
+          </g>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">PULL-UP</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Pull-Ups / Chin-Ups</div>
+        <div class="card-muscles">Primary: Latissimus Dorsi · Biceps · Rear Deltoid</div>
+        <div class="card-desc">The ultimate upper body pulling test. Wide grip overhand (pull-up) hits lats harder; underhand narrow grip (chin-up) emphasizes biceps. Pull chest to bar, squeeze shoulder blades at top.</div>
+        <div class="card-meta">
+          <span class="meta-chip">4 Sets</span>
+          <span class="meta-chip">6–15 Reps</span>
+          <span class="meta-chip">Bodyweight</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="lat pulldown cable machine back lats" data-muscles="back,biceps">
+      <div class="card-animation">
+        <svg class="anim-svg glow-pull" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="80" y1="10" x2="80" y2="35" stroke="#555" stroke-width="2" stroke-dasharray="4,3"/>
+          <line x1="40" y1="35" x2="120" y2="35" stroke="#555" stroke-width="3"/>
+          <circle cx="80" cy="55" r="10" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="65" x2="80" y2="103" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="103" x2="65" y2="128" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="103" x2="95" y2="128" stroke="#00d4ff" stroke-width="2.5"/>
+          <g style="animation: press 1.8s ease-in-out infinite;">
+            <line x1="80" y1="72" x2="42" y2="42" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="72" x2="118" y2="42" stroke="#00d4ff" stroke-width="2.5"/>
+          </g>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">LAT PULLDOWN</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Lat Pulldown</div>
+        <div class="card-muscles">Primary: Latissimus Dorsi · Secondary: Biceps, Teres Major</div>
+        <div class="card-desc">Cable machine pull-up alternative. Grip wide, pull bar to upper chest while driving elbows down and back. Lean slightly back, arch chest upward. Excellent for building lat width and learning the pull-up movement pattern.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3–4 Sets</span>
+          <span class="meta-chip">10–12 Reps</span>
+          <span class="meta-chip">Cable Machine</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="barbell row bent over back thickness" data-muscles="back,biceps,shoulders">
+      <div class="card-animation">
+        <svg class="anim-svg glow-pull" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="50" r="10" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="60" x2="65" y2="85" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="65" y1="85" x2="55" y2="115" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="65" y1="85" x2="78" y2="115" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="55" y1="115" x2="50" y2="130" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="78" y1="115" x2="75" y2="130" stroke="#00d4ff" stroke-width="2.5"/>
+          <g style="animation: row 1.5s ease-in-out infinite;">
+            <line x1="65" y1="75" x2="90" y2="90" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="90" y1="90" x2="100" y2="75" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="85" y1="92" x2="130" y2="95" stroke="#00d4ff" stroke-width="3"/>
+            <circle cx="132" cy="95" r="5" fill="none" stroke="#00d4ff" stroke-width="2"/>
+          </g>
+          <line x1="20" y1="130" x2="140" y2="130" stroke="#333" stroke-width="1"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">BARBELL ROW</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Barbell Row</div>
+        <div class="card-muscles">Primary: Lats, Mid-Traps, Rhomboids · Secondary: Biceps, Rear Delts</div>
+        <div class="card-desc">Bent-over barbell row builds serious back thickness. Hinge at hips ~45°, pull bar to lower chest/upper abs, squeeze shoulder blades. Overhand grip hits traps; underhand grip emphasizes lower lats and biceps.</div>
+        <div class="card-meta">
+          <span class="meta-chip">4 Sets</span>
+          <span class="meta-chip">6–10 Reps</span>
+          <span class="meta-chip">Barbell</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="bicep curls barbell dumbbell arm isolation" data-muscles="biceps">
+      <div class="card-animation">
+        <svg class="anim-svg glow-pull" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="50" r="10" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="60" x2="80" y2="100" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="100" x2="65" y2="128" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="100" x2="95" y2="128" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="72" x2="58" y2="80" stroke="#00d4ff" stroke-width="2.5"/>
+          <g style="animation: curl 1.5s ease-in-out infinite; transform-origin: 58px 80px;">
+            <line x1="58" y1="80" x2="48" y2="60" stroke="#00d4ff" stroke-width="2.5"/>
+            <rect x="38" y="53" width="16" height="6" rx="2" fill="none" stroke="#00d4ff" stroke-width="2"/>
+          </g>
+          <line x1="80" y1="72" x2="102" y2="80" stroke="#00d4ff" stroke-width="2.5"/>
+          <g style="animation: curl 1.5s 0.75s ease-in-out infinite; transform-origin: 102px 80px;">
+            <line x1="102" y1="80" x2="112" y2="60" stroke="#00d4ff" stroke-width="2.5"/>
+            <rect x="106" y="53" width="16" height="6" rx="2" fill="none" stroke="#00d4ff" stroke-width="2"/>
+          </g>
+          <line x1="20" y1="128" x2="140" y2="128" stroke="#333" stroke-width="1"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">BICEP CURLS</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Bicep Curls</div>
+        <div class="card-muscles">Primary: Biceps Brachii · Secondary: Brachialis, Brachioradialis</div>
+        <div class="card-desc">The quintessential arm exercise. Supinate wrist as you curl, squeeze hard at the top, control the descent. Barbell allows heavier loads; dumbbell allows rotation. Alternate or simultaneous — both work well for bicep peak and size.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">10–15 Reps</span>
+          <span class="meta-chip">Barbell/DB</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="face pulls rear delts rotator cuff cable" data-muscles="shoulders,back">
+      <div class="card-animation">
+        <svg class="anim-svg glow-pull" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="145" y1="70" x2="110" y2="75" stroke="#555" stroke-width="2" stroke-dasharray="3,3"/>
+          <circle cx="80" cy="60" r="10" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="70" x2="80" y2="108" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="108" x2="65" y2="130" stroke="#00d4ff" stroke-width="2.5"/>
+          <line x1="80" y1="108" x2="95" y2="130" stroke="#00d4ff" stroke-width="2.5"/>
+          <g style="animation: press 1.5s ease-in-out infinite;">
+            <line x1="80" y1="75" x2="55" y2="65" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="55" y1="65" x2="55" y2="45" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="75" x2="105" y2="65" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="105" y1="65" x2="108" y2="73" stroke="#00d4ff" stroke-width="2.5"/>
+          </g>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">FACE PULLS</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Face Pulls</div>
+        <div class="card-muscles">Primary: Rear Deltoids · Rotator Cuff · Upper Traps</div>
+        <div class="card-desc">Essential for shoulder health and posterior delt development. Pull rope to face level with elbows high and wide, externally rotating at peak. Vital for balancing all the pressing work. Do these often.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">15–20 Reps</span>
+          <span class="meta-chip">Cable Machine</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="deadlift pull barbell hip hinge back glutes hamstrings" data-muscles="back,hamstrings,glutes">
+      <div class="card-animation">
+        <svg class="anim-svg glow-pull" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: squat 2s ease-in-out infinite;">
+            <circle cx="80" cy="48" r="10" fill="none" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="58" x2="80" y2="85" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="85" x2="62" y2="110" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="62" y1="110" x2="57" y2="128" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="85" x2="98" y2="110" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="98" y1="110" x2="103" y2="128" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="72" x2="54" y2="85" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="80" y1="72" x2="106" y2="85" stroke="#00d4ff" stroke-width="2.5"/>
+            <line x1="35" y1="112" x2="125" y2="112" stroke="#00d4ff" stroke-width="3"/>
+            <circle cx="35" cy="112" r="8" fill="none" stroke="#00d4ff" stroke-width="2"/>
+            <circle cx="125" cy="112" r="8" fill="none" stroke="#00d4ff" stroke-width="2"/>
+          </g>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">DEADLIFT</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Deadlifts</div>
+        <div class="card-muscles">Primary: Hamstrings, Glutes, Erectors · Secondary: Lats, Traps, Quads</div>
+        <div class="card-desc">The king of all exercises — works nearly every muscle in the body. Hinge at hips, flat back, bar over mid-foot. Drive through the floor, keep bar close to shins, lock out hips at top.</div>
+        <div class="card-meta">
+          <span class="meta-chip">4 Sets</span>
+          <span class="meta-chip">3–8 Reps</span>
+          <span class="meta-chip">Barbell</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ===== 3. LEGS ===== -->
+<section class="section legs" id="legs">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div class="section-title">LEGS</div>
+    <div class="section-badge">Quads · Hamstrings · Glutes · Calves</div>
+  </div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card" data-search="squat quads glutes legs barbell compound" data-muscles="quads,glutes,hamstrings">
+      <div class="card-animation">
+        <svg class="anim-svg glow-legs" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: squat 2s ease-in-out infinite;">
+            <circle cx="80" cy="48" r="10" fill="none" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="58" x2="80" y2="88" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="68" x2="50" y2="68" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="68" x2="110" y2="68" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="38" y1="68" x2="122" y2="68" stroke="#a855f7" stroke-width="3"/>
+            <circle cx="36" cy="68" r="6" fill="none" stroke="#a855f7" stroke-width="2"/>
+            <circle cx="124" cy="68" r="6" fill="none" stroke="#a855f7" stroke-width="2"/>
+            <line x1="80" y1="88" x2="62" y2="110" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="62" y1="110" x2="58" y2="128" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="88" x2="98" y2="110" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="98" y1="110" x2="102" y2="128" stroke="#a855f7" stroke-width="2.5"/>
+          </g>
+          <line x1="20" y1="128" x2="140" y2="128" stroke="#333" stroke-width="1"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">SQUAT</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Squats</div>
+        <div class="card-muscles">Primary: Quadriceps, Glutes · Secondary: Hamstrings, Core, Erectors</div>
+        <div class="card-desc">The foundational lower body movement. Bar on traps, feet shoulder-width, squat to parallel or below. Drive knees out, keep chest up. Back squat builds mass; front squat hits quads harder.</div>
+        <div class="card-meta">
+          <span class="meta-chip">4–5 Sets</span>
+          <span class="meta-chip">5–12 Reps</span>
+          <span class="meta-chip">Barbell</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="lunges legs quads glutes balance" data-muscles="quads,glutes,hamstrings">
+      <div class="card-animation">
+        <svg class="anim-svg glow-legs" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: squat 2s ease-in-out infinite;">
+            <circle cx="80" cy="45" r="10" fill="none" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="55" x2="80" y2="85" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="68" x2="62" y2="75" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="68" x2="98" y2="75" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="85" x2="60" y2="105" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="60" y1="105" x2="55" y2="128" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="85" x2="105" y2="98" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="105" y1="98" x2="112" y2="120" stroke="#a855f7" stroke-width="2.5"/>
+            <circle cx="112" cy="121" r="4" fill="#a855f7"/>
+          </g>
+          <line x1="20" y1="128" x2="140" y2="128" stroke="#333" stroke-width="1"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">LUNGE</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Lunges</div>
+        <div class="card-muscles">Primary: Quadriceps, Glutes · Secondary: Hamstrings, Calves, Core</div>
+        <div class="card-desc">Unilateral leg exercise that builds balance, coordination, and corrects imbalances. Step forward, lower back knee toward floor, push off front heel to return. Walking lunges, reverse lunges, and Bulgarian split squats are valuable variations.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">10–15 Reps/leg</span>
+          <span class="meta-chip">Bodyweight/DB</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="romanian deadlift RDL hamstrings glutes hip hinge" data-muscles="hamstrings,glutes">
+      <div class="card-animation">
+        <svg class="anim-svg glow-legs" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: squat 2s ease-in-out infinite;">
+            <circle cx="80" cy="40" r="10" fill="none" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="50" x2="70" y2="82" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="75" y1="65" x2="55" y2="75" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="75" y1="65" x2="95" y2="75" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="40" y1="80" x2="120" y2="80" stroke="#a855f7" stroke-width="3"/>
+            <circle cx="38" cy="80" r="6" fill="none" stroke="#a855f7" stroke-width="2"/>
+            <circle cx="122" cy="80" r="6" fill="none" stroke="#a855f7" stroke-width="2"/>
+            <line x1="70" y1="82" x2="62" y2="110" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="62" y1="110" x2="58" y2="128" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="70" y1="82" x2="80" y2="110" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="110" x2="82" y2="128" stroke="#a855f7" stroke-width="2.5"/>
+          </g>
+          <line x1="20" y1="128" x2="140" y2="128" stroke="#333" stroke-width="1"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">RDL</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Romanian Deadlift</div>
+        <div class="card-muscles">Primary: Hamstrings, Glutes · Secondary: Lower Back, Calves</div>
+        <div class="card-desc">Hinge-dominant movement for hamstring and glute development. Start standing, push hips back while lowering bar along shins, feel the hamstring stretch, then drive hips forward to return.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3–4 Sets</span>
+          <span class="meta-chip">8–12 Reps</span>
+          <span class="meta-chip">Barbell/DB</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="hip thrust glutes barbell bench booty" data-muscles="glutes,hamstrings">
+      <div class="card-animation">
+        <svg class="anim-svg glow-legs" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="75" width="55" height="20" rx="3" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+          <g style="animation: squat 1.8s ease-in-out infinite;">
+            <circle cx="50" cy="65" r="10" fill="none" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="50" y1="75" x2="55" y2="80" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="55" y1="80" x2="80" y2="80" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="80" y1="80" x2="90" y2="100" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="90" y1="100" x2="110" y2="90" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="55" y1="78" x2="125" y2="78" stroke="#a855f7" stroke-width="3"/>
+            <circle cx="52" cy="78" r="6" fill="none" stroke="#a855f7" stroke-width="2"/>
+            <circle cx="128" cy="78" r="6" fill="none" stroke="#a855f7" stroke-width="2"/>
+          </g>
+          <line x1="20" y1="128" x2="140" y2="128" stroke="#333" stroke-width="1"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">HIP THRUST</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Hip Thrust</div>
+        <div class="card-muscles">Primary: Gluteus Maximus · Secondary: Hamstrings, Core</div>
+        <div class="card-desc">The most effective exercise for glute development. Upper back on bench, barbell across hips — drive hips up by squeezing glutes hard, hold for 1 second at the top. Research consistently shows this activates glutes more than any other movement.</div>
+        <div class="card-meta">
+          <span class="meta-chip">4 Sets</span>
+          <span class="meta-chip">10–15 Reps</span>
+          <span class="meta-chip">Barbell/DB</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="calf raises calves gastrocnemius soleus" data-muscles="calves">
+      <div class="card-animation">
+        <svg class="anim-svg glow-legs" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="45" r="10" fill="none" stroke="#a855f7" stroke-width="2.5"/>
+          <line x1="80" y1="55" x2="80" y2="95" stroke="#a855f7" stroke-width="2.5"/>
+          <line x1="80" y1="68" x2="58" y2="75" stroke="#a855f7" stroke-width="2.5"/>
+          <line x1="80" y1="68" x2="102" y2="75" stroke="#a855f7" stroke-width="2.5"/>
+          <line x1="80" y1="95" x2="68" y2="118" stroke="#a855f7" stroke-width="2.5"/>
+          <line x1="80" y1="95" x2="92" y2="118" stroke="#a855f7" stroke-width="2.5"/>
+          <g style="animation: bounce 1.2s ease-in-out infinite;">
+            <line x1="68" y1="118" x2="65" y2="128" stroke="#a855f7" stroke-width="2.5"/>
+            <line x1="92" y1="118" x2="95" y2="128" stroke="#a855f7" stroke-width="2.5"/>
+            <circle cx="63" cy="129" r="4" fill="#a855f7"/>
+            <circle cx="97" cy="129" r="4" fill="#a855f7"/>
+          </g>
+          <line x1="20" y1="132" x2="140" y2="132" stroke="#333" stroke-width="1"/>
+          <text x="80" y="148" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">CALF RAISE</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Calf Raises</div>
+        <div class="card-muscles">Primary: Gastrocnemius · Secondary: Soleus, Tibialis</div>
+        <div class="card-desc">Stand on edge of step for full range of motion — deep stretch at bottom, full contraction at top. High rep ranges work well (15–30). Seated calf raises (bent knee) target the deeper soleus muscle.</div>
+        <div class="card-meta">
+          <span class="meta-chip">4 Sets</span>
+          <span class="meta-chip">15–25 Reps</span>
+          <span class="meta-chip">Machine/BW</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ===== 4. CORE ===== -->
+<section class="section core" id="core">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div class="section-title">CORE</div>
+    <div class="section-badge">Abs · Obliques · Lower Back</div>
+  </div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card" data-search="plank core stability abs" data-muscles="core">
+      <div class="card-animation">
+        <svg class="anim-svg glow-core" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: plank-pulse 2s ease-in-out infinite;">
+            <circle cx="40" cy="65" r="10" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="40" y1="75" x2="110" y2="85" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="55" y1="77" x2="50" y2="100" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="50" y1="100" x2="45" y2="115" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="85" y1="82" x2="95" y2="105" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="95" y1="105" x2="105" y2="118" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="25" y1="77" x2="25" y2="100" stroke="#22c55e" stroke-width="2.5"/>
+            <circle cx="25" cy="100" r="4" fill="#22c55e"/>
+          </g>
+          <line x1="10" y1="118" x2="140" y2="118" stroke="#333" stroke-width="1"/>
+          <text x="80" y="140" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">PLANK</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Plank</div>
+        <div class="card-muscles">Primary: Transverse Abdominis · Rectus Abdominis · Obliques</div>
+        <div class="card-desc">The gold standard isometric core exercise. Hold a perfect straight line from head to heels, engaging every core muscle simultaneously. Progress by adding time, weight plates on back, or moving to side planks and RKC planks.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3–5 Sets</span>
+          <span class="meta-chip">30–90 Sec</span>
+          <span class="meta-chip">Bodyweight</span>
+          <span class="meta-chip">Isometric</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="crunches sit ups abs rectus abdominis" data-muscles="core">
+      <div class="card-animation">
+        <svg class="anim-svg glow-core" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="120" x2="140" y2="120" stroke="#333" stroke-width="1"/>
+          <g style="animation: crunch 1.5s ease-in-out infinite; transform-origin: 80px 110px;">
+            <circle cx="80" cy="70" r="10" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="80" y1="80" x2="80" y2="110" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="80" y1="90" x2="60" y2="80" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="80" y1="90" x2="100" y2="80" stroke="#22c55e" stroke-width="2.5"/>
+          </g>
+          <line x1="60" y1="110" x2="50" y2="120" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="100" y1="110" x2="110" y2="120" stroke="#22c55e" stroke-width="2.5"/>
+          <text x="80" y="140" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">CRUNCH</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Crunches / Sit-Ups</div>
+        <div class="card-muscles">Primary: Rectus Abdominis · Secondary: Hip Flexors, Obliques</div>
+        <div class="card-desc">Classic ab isolation. Focus on curling the torso, not pulling the neck. Exhale at the top, squeeze abs hard, lower under control. Weighted crunches, cable crunches, and decline sit-ups add progressive overload.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3–4 Sets</span>
+          <span class="meta-chip">15–25 Reps</span>
+          <span class="meta-chip">Bodyweight</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="leg raises hanging abs lower abs" data-muscles="core">
+      <div class="card-animation">
+        <svg class="anim-svg glow-core" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="30" y1="18" x2="130" y2="18" stroke="#555" stroke-width="4"/>
+          <circle cx="80" cy="35" r="10" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="80" y1="18" x2="65" y2="28" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="80" y1="18" x2="95" y2="28" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="80" y1="45" x2="80" y2="80" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="80" y1="62" x2="65" y2="70" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="80" y1="62" x2="95" y2="70" stroke="#22c55e" stroke-width="2.5"/>
+          <g style="animation: curl 1.8s ease-in-out infinite; transform-origin: 80px 80px;">
+            <line x1="80" y1="80" x2="70" y2="108" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="70" y1="108" x2="68" y2="130" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="80" y1="80" x2="90" y2="108" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="90" y1="108" x2="92" y2="130" stroke="#22c55e" stroke-width="2.5"/>
+          </g>
+          <text x="80" y="148" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">LEG RAISES</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Hanging Leg Raises</div>
+        <div class="card-muscles">Primary: Lower Abs (Rectus Abdominis) · Hip Flexors</div>
+        <div class="card-desc">Hang from a bar and raise legs to parallel or above. The hardest ab movement. Avoid swinging — control every inch. Bent knee version is easier; straight legs are advanced. Tremendous lower ab and hip flexor strength builder.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">10–15 Reps</span>
+          <span class="meta-chip">Bodyweight</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="russian twist obliques rotation core" data-muscles="core">
+      <div class="card-animation">
+        <svg class="anim-svg glow-core" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="65" r="10" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="80" y1="75" x2="80" y2="102" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="80" y1="102" x2="65" y2="120" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="80" y1="102" x2="95" y2="120" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="65" y1="120" x2="60" y2="132" stroke="#22c55e" stroke-width="2.5"/>
+          <line x1="95" y1="120" x2="100" y2="132" stroke="#22c55e" stroke-width="2.5"/>
+          <g style="animation: swing 1.5s ease-in-out infinite; transform-origin: 80px 85px;">
+            <line x1="80" y1="85" x2="50" y2="80" stroke="#22c55e" stroke-width="2.5"/>
+            <line x1="80" y1="85" x2="110" y2="80" stroke="#22c55e" stroke-width="2.5"/>
+            <circle cx="48" cy="80" r="5" fill="none" stroke="#22c55e" stroke-width="2"/>
+            <circle cx="112" cy="80" r="5" fill="none" stroke="#22c55e" stroke-width="2"/>
+          </g>
+          <text x="80" y="148" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">RUSSIAN TWIST</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Russian Twists</div>
+        <div class="card-muscles">Primary: Obliques · Secondary: Rectus Abdominis, Hip Flexors</div>
+        <div class="card-desc">Seated rotational exercise targeting the obliques. Feet elevated (harder) or on ground, rotate torso side to side touching the floor. Add a weight plate or medicine ball for resistance. Great for rotational power and waist definition.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">20–30 Reps</span>
+          <span class="meta-chip">Bodyweight/DB</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ===== 5. FULL BODY ===== -->
+<section class="section fullbody" id="fullbody">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div class="section-title">FULL BODY</div>
+    <div class="section-badge">Power · Athletic · Total</div>
+  </div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card" data-search="burpees full body cardio conditioning" data-muscles="fullbody,cardio">
+      <div class="card-animation">
+        <svg class="anim-svg glow-full" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: bounce 1.2s ease-in-out infinite;">
+            <circle cx="80" cy="40" r="10" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="50" x2="80" y2="88" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="65" x2="55" y2="55" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="65" x2="105" y2="55" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="88" x2="65" y2="112" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="88" x2="95" y2="112" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="65" y1="112" x2="62" y2="130" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="95" y1="112" x2="98" y2="130" stroke="#f59e0b" stroke-width="2.5"/>
+          </g>
+          <line x1="20" y1="130" x2="140" y2="130" stroke="#333" stroke-width="1"/>
+          <text x="80" y="148" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">BURPEE</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Burpees</div>
+        <div class="card-muscles">Full Body · Conditioning · Cardiovascular</div>
+        <div class="card-desc">The ultimate full-body conditioning exercise. From standing, drop to push-up position, perform a push-up, jump feet to hands, then explode up with a jump and clap overhead. Extremely demanding — burns massive calories and builds total body endurance.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3–5 Sets</span>
+          <span class="meta-chip">10–20 Reps</span>
+          <span class="meta-chip">Bodyweight</span>
+          <span class="meta-chip">Compound</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="clean and press power barbell olympic" data-muscles="fullbody,shoulders,back,quads">
+      <div class="card-animation">
+        <svg class="anim-svg glow-full" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: bounce 1.5s ease-in-out infinite;">
+            <circle cx="80" cy="45" r="10" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="55" x2="80" y2="90" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="65" x2="48" y2="55" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="65" x2="112" y2="55" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="35" y1="50" x2="125" y2="50" stroke="#f59e0b" stroke-width="3"/>
+            <circle cx="33" cy="50" r="6" fill="none" stroke="#f59e0b" stroke-width="2"/>
+            <circle cx="127" cy="50" r="6" fill="none" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="80" y1="90" x2="65" y2="115" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="90" x2="95" y2="115" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="65" y1="115" x2="62" y2="130" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="95" y1="115" x2="98" y2="130" stroke="#f59e0b" stroke-width="2.5"/>
+          </g>
+          <line x1="20" y1="130" x2="140" y2="130" stroke="#333" stroke-width="1"/>
+          <text x="80" y="148" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">CLEAN & PRESS</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Clean and Press</div>
+        <div class="card-muscles">Full Body: Legs, Back, Shoulders, Core, Arms</div>
+        <div class="card-desc">Olympic-style compound movement that develops explosive power from head to toe. Clean the bar from the floor to shoulder height, then press overhead. Develops athletic power, coordination, and total body strength simultaneously.</div>
+        <div class="card-meta">
+          <span class="meta-chip">4 Sets</span>
+          <span class="meta-chip">4–6 Reps</span>
+          <span class="meta-chip">Barbell</span>
+          <span class="meta-chip">Power</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="kettlebell swing glutes hamstrings power hips" data-muscles="glutes,hamstrings,back,fullbody">
+      <div class="card-animation">
+        <svg class="anim-svg glow-full" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: swing 1s ease-in-out infinite; transform-origin: 80px 90px;">
+            <circle cx="80" cy="50" r="10" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="60" x2="80" y2="88" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="70" x2="60" y2="80" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="60" y1="80" x2="55" y2="95" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="70" x2="100" y2="80" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="100" y1="80" x2="105" y2="95" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="88" x2="68" y2="110" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="80" y1="88" x2="92" y2="110" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="68" y1="110" x2="65" y2="128" stroke="#f59e0b" stroke-width="2.5"/>
+            <line x1="92" y1="110" x2="95" y2="128" stroke="#f59e0b" stroke-width="2.5"/>
+            <circle cx="56" cy="100" r="7" fill="none" stroke="#f59e0b" stroke-width="2"/>
+          </g>
+          <line x1="20" y1="128" x2="140" y2="128" stroke="#333" stroke-width="1"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">KB SWING</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Kettlebell Swings</div>
+        <div class="card-muscles">Primary: Glutes, Hamstrings · Secondary: Core, Back, Shoulders</div>
+        <div class="card-desc">Hip-hinge power movement that builds explosive posterior chain strength. Drive hips forward to swing the kettlebell, not arms. At peak, body is straight and glutes fully contracted. Excellent for fat loss, conditioning, and athletic power.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3–5 Sets</span>
+          <span class="meta-chip">15–20 Reps</span>
+          <span class="meta-chip">Kettlebell</span>
+          <span class="meta-chip">Power</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ===== 6. CARDIO ===== -->
+<section class="section cardio" id="cardio">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div class="section-title">CARDIO</div>
+    <div class="section-badge">Endurance · Fat Loss · Heart Health</div>
+  </div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card" data-search="running treadmill jogging cardio" data-muscles="cardio">
+      <div class="card-animation">
+        <svg class="anim-svg glow-cardio" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: run 0.5s ease-in-out infinite;">
+            <circle cx="80" cy="45" r="10" fill="none" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="80" y1="55" x2="80" y2="90" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="80" y1="68" x2="55" y2="60" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="80" y1="68" x2="105" y2="60" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="80" y1="90" x2="60" y2="108" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="80" y1="90" x2="100" y2="108" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="60" y1="108" x2="55" y2="128" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="100" y1="108" x2="108" y2="120" stroke="#ec4899" stroke-width="2.5"/>
+          </g>
+          <line x1="20" y1="128" x2="140" y2="128" stroke="#333" stroke-width="1"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">RUNNING</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Running / Jogging</div>
+        <div class="card-muscles">Cardiovascular System · Legs · Core Stability</div>
+        <div class="card-desc">The most accessible cardio. Start with 20–30 minute easy runs, build up over weeks. LISS (low intensity steady state) burns fat effectively; HIIT intervals build cardiovascular capacity faster. Aim for 150+ minutes of moderate cardio per week.</div>
+        <div class="card-meta">
+          <span class="meta-chip">20–60 Min</span>
+          <span class="meta-chip">3–5x/week</span>
+          <span class="meta-chip">Treadmill/Road</span>
+          <span class="meta-chip">LISS/HIIT</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="jump rope skipping cardio coordination" data-muscles="cardio,calves">
+      <div class="card-animation">
+        <svg class="anim-svg glow-cardio" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation: bounce 0.6s ease-in-out infinite;">
+            <circle cx="80" cy="50" r="10" fill="none" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="80" y1="60" x2="80" y2="95" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="80" y1="70" x2="58" y2="78" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="80" y1="70" x2="102" y2="78" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="80" y1="95" x2="70" y2="115" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="80" y1="95" x2="90" y2="115" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="70" y1="115" x2="68" y2="130" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="90" y1="115" x2="92" y2="130" stroke="#ec4899" stroke-width="2.5"/>
+          </g>
+          <g style="animation: rope 0.6s ease-in-out infinite;">
+            <path d="M 20,128 Q 55,100 80,128 Q 105,155 140,128" fill="none" stroke="#ec4899" stroke-width="2" stroke-dasharray="5,3"/>
+          </g>
+          <text x="80" y="148" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">JUMP ROPE</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Jump Rope</div>
+        <div class="card-muscles">Cardiovascular · Calves · Coordination · Core</div>
+        <div class="card-desc">Pound for pound the best cardio tool. Burns up to 1000 cal/hour, improves coordination and rhythm, builds calf strength. Start with 30-second intervals. Progress to double-unders. 10 minutes of jumping rope ≈ 30 minutes of jogging.</div>
+        <div class="card-meta">
+          <span class="meta-chip">10–30 Min</span>
+          <span class="meta-chip">Intervals</span>
+          <span class="meta-chip">Jump Rope</span>
+          <span class="meta-chip">HIIT</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="cycling bike cardio legs endurance" data-muscles="cardio,quads,hamstrings">
+      <div class="card-animation">
+        <svg class="anim-svg glow-cardio" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="55" cy="108" r="22" fill="none" stroke="#333" stroke-width="3"/>
+          <circle cx="110" cy="108" r="22" fill="none" stroke="#333" stroke-width="3"/>
+          <line x1="55" y1="108" x2="82" y2="78" stroke="#444" stroke-width="3"/>
+          <line x1="82" y1="78" x2="110" y2="108" stroke="#444" stroke-width="3"/>
+          <line x1="82" y1="78" x2="82" y2="62" stroke="#444" stroke-width="2.5"/>
+          <circle cx="80" cy="55" r="10" fill="none" stroke="#ec4899" stroke-width="2.5"/>
+          <line x1="80" y1="65" x2="82" y2="78" stroke="#ec4899" stroke-width="2.5"/>
+          <g style="animation: pedal 1s linear infinite; transform-origin: 82px 95px;">
+            <line x1="82" y1="95" x2="75" y2="108" stroke="#ec4899" stroke-width="2.5"/>
+            <line x1="82" y1="95" x2="89" y2="82" stroke="#ec4899" stroke-width="2.5"/>
+          </g>
+          <text x="80" y="148" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">CYCLING</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Cycling / Spin Bike</div>
+        <div class="card-muscles">Cardiovascular · Quads · Glutes · Hamstrings</div>
+        <div class="card-desc">Low-impact cardio excellent for knee health while still torching calories and building leg endurance. Stationary spin classes are high intensity; road cycling builds sustained aerobic capacity. Adjust resistance for LISS or HIIT training.</div>
+        <div class="card-meta">
+          <span class="meta-chip">20–60 Min</span>
+          <span class="meta-chip">3–5x/week</span>
+          <span class="meta-chip">Bike/Machine</span>
+          <span class="meta-chip">LISS</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ===== 7. ISOLATION / MACHINE ===== -->
+<section class="section isolation" id="isolation">
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <div class="section-title">ISOLATION</div>
+    <div class="section-badge">Precision · Detail · Refinement</div>
+  </div>
+  <div class="exercise-grid">
+
+    <div class="exercise-card" data-search="cable crossover chest fly constant tension" data-muscles="chest">
+      <div class="card-animation">
+        <svg class="anim-svg glow-iso" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="20" x2="20" y2="130" stroke="#333" stroke-width="3"/>
+          <line x1="140" y1="20" x2="140" y2="130" stroke="#333" stroke-width="3"/>
+          <circle cx="20" cy="40" r="6" fill="#555"/>
+          <circle cx="140" cy="40" r="6" fill="#555"/>
+          <line x1="26" y1="40" x2="70" y2="80" stroke="#555" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <line x1="134" y1="40" x2="90" y2="80" stroke="#555" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <circle cx="80" cy="62" r="10" fill="none" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="72" x2="80" y2="108" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="108" x2="68" y2="128" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="108" x2="92" y2="128" stroke="#64748b" stroke-width="2.5"/>
+          <g style="animation: swing 1.8s ease-in-out infinite;">
+            <line x1="80" y1="80" x2="55" y2="75" stroke="#64748b" stroke-width="2.5"/>
+            <line x1="80" y1="80" x2="105" y2="75" stroke="#64748b" stroke-width="2.5"/>
+          </g>
+          <text x="80" y="148" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">CABLE CROSSOVER</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Cable Crossover</div>
+        <div class="card-muscles">Primary: Pectoralis Major (inner chest emphasis)</div>
+        <div class="card-desc">Cables provide constant tension through the full arc, unlike dumbbells that lose resistance at peak contraction. High cables target lower chest; low cables target upper chest. Unmatched for chest definition and inner chest development.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">12–15 Reps</span>
+          <span class="meta-chip">Cable Station</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="pec deck chest fly machine" data-muscles="chest">
+      <div class="card-animation">
+        <svg class="anim-svg glow-iso" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="60" width="120" height="70" rx="5" fill="none" stroke="#333" stroke-width="2"/>
+          <circle cx="80" cy="75" r="10" fill="none" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="85" x2="80" y2="100" stroke="#64748b" stroke-width="2.5"/>
+          <g style="animation: swing 1.8s ease-in-out infinite;">
+            <line x1="80" y1="88" x2="42" y2="88" stroke="#64748b" stroke-width="2.5"/>
+            <line x1="80" y1="88" x2="118" y2="88" stroke="#64748b" stroke-width="2.5"/>
+            <circle cx="40" cy="88" r="6" fill="none" stroke="#64748b" stroke-width="2"/>
+            <circle cx="120" cy="88" r="6" fill="none" stroke="#64748b" stroke-width="2"/>
+          </g>
+          <text x="80" y="148" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">PEC DECK</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Pec Deck / Chest Fly Machine</div>
+        <div class="card-muscles">Primary: Pectoralis Major · Sternal Head</div>
+        <div class="card-desc">Guided machine for chest isolation. Sit upright, arms on pads, squeeze pads together focusing on the center of the chest. Ideal for warming up, finisher sets, or when training without a spotter. Excellent pump for chest development.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">12–15 Reps</span>
+          <span class="meta-chip">Machine</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="skull crushers triceps ez bar lying" data-muscles="triceps">
+      <div class="card-animation">
+        <svg class="anim-svg glow-iso" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="100" width="100" height="8" rx="3" fill="#333"/>
+          <line x1="40" y1="108" x2="40" y2="125" stroke="#333" stroke-width="3"/>
+          <line x1="120" y1="108" x2="120" y2="125" stroke="#333" stroke-width="3"/>
+          <circle cx="80" cy="86" r="10" fill="none" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="96" x2="80" y2="102" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="102" x2="65" y2="118" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="102" x2="95" y2="118" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="93" x2="60" y2="83" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="93" x2="100" y2="83" stroke="#64748b" stroke-width="2.5"/>
+          <g style="animation: curl 1.8s ease-in-out infinite; transform-origin: 60px 83px;">
+            <line x1="60" y1="83" x2="65" y2="60" stroke="#64748b" stroke-width="2.5"/>
+          </g>
+          <g style="animation: curl 1.8s ease-in-out infinite; transform-origin: 100px 83px;">
+            <line x1="100" y1="83" x2="95" y2="60" stroke="#64748b" stroke-width="2.5"/>
+          </g>
+          <line x1="55" y1="58" x2="105" y2="58" stroke="#64748b" stroke-width="2.5"/>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">SKULL CRUSHERS</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Skull Crushers</div>
+        <div class="card-muscles">Primary: Long Head Triceps · Secondary: Lateral/Medial Head</div>
+        <div class="card-desc">Lying triceps extension with EZ-bar or dumbbells. Lower bar to forehead by bending only at the elbows. Excellent for targeting the long head of the triceps for arm thickness. Use controlled tempo throughout.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">10–12 Reps</span>
+          <span class="meta-chip">EZ-Bar/DB</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="hammer curls brachialis neutral grip arms" data-muscles="biceps">
+      <div class="card-animation">
+        <svg class="anim-svg glow-iso" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="50" r="10" fill="none" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="60" x2="80" y2="100" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="100" x2="65" y2="128" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="100" x2="95" y2="128" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="72" x2="55" y2="82" stroke="#64748b" stroke-width="2.5"/>
+          <g style="animation: curl 1.5s ease-in-out infinite; transform-origin: 55px 82px;">
+            <line x1="55" y1="82" x2="50" y2="60" stroke="#64748b" stroke-width="2.5"/>
+            <line x1="50" y1="52" x2="50" y2="42" stroke="#64748b" stroke-width="4"/>
+            <line x1="44" y1="52" x2="56" y2="52" stroke="#64748b" stroke-width="2"/>
+          </g>
+          <text x="80" y="145" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">HAMMER CURLS</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Hammer Curls</div>
+        <div class="card-muscles">Primary: Brachialis · Secondary: Brachioradialis, Biceps</div>
+        <div class="card-desc">Neutral grip curl that develops the brachialis — the muscle that pushes the bicep peak up. Essential for arm thickness and forearm development. The neutral wrist position also reduces strain on the elbow joint.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">12–15 Reps</span>
+          <span class="meta-chip">Dumbbell</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exercise-card" data-search="leg extension quad isolation machine" data-muscles="quads">
+      <div class="card-animation">
+        <svg class="anim-svg glow-iso" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+          <rect x="25" y="70" width="60" height="35" rx="3" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+          <circle cx="80" cy="65" r="10" fill="none" stroke="#64748b" stroke-width="2.5"/>
+          <line x1="80" y1="75" x2="80" y2="95" stroke="#64748b" stroke-width="2.5"/>
+          <g style="animation: kickback 1.5s ease-in-out infinite; transform-origin: 80px 95px;">
+            <line x1="80" y1="95" x2="75" y2="118" stroke="#64748b" stroke-width="2.5"/>
+            <line x1="75" y1="118" x2="95" y2="120" stroke="#64748b" stroke-width="2.5"/>
+            <rect x="93" y="118" width="15" height="6" rx="2" fill="none" stroke="#64748b" stroke-width="2"/>
+          </g>
+          <text x="80" y="148" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">LEG EXTENSION</text>
+        </svg>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Leg Extension</div>
+        <div class="card-muscles">Primary: Quadriceps (all 4 heads) · Focus: Rectus Femoris</div>
+        <div class="card-desc">Isolation machine for quad definition and strength. Seat adjusted so knees align with machine pivot, extend to lockout squeezing quads hard. Best used at end of leg session. Moderate weight, high reps, and slow tempo work excellently.</div>
+        <div class="card-meta">
+          <span class="meta-chip">3 Sets</span>
+          <span class="meta-chip">12–15 Reps</span>
+          <span class="meta-chip">Machine</span>
+          <span class="meta-chip">Isolation</span>
+        </div>
+        <div class="difficulty">
+          <span class="difficulty-label">Difficulty</span>
+          <div class="dot filled"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <p>GYM ATLAS — Complete Exercise Encyclopedia · Built for Lifters · No Excuses</p>
+  <p style="margin-top:0.5rem; font-size:0.6rem; opacity:0.5;">50+ Exercises · 7 Categories · BMI Calculator · Weight Goal Planner · Music Player</p>
+</footer>
+
+</div><!-- end main-wrap -->
+
+<script>
+// ===================== MUSIC PLAYER =====================
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let musicPlaying = false;
+let musicNodes = [];
+
+function createWorkoutMusic() {
+  const tempo = 130; // BPM
+  const beatLen = 60 / tempo;
+  const now = audioCtx.currentTime;
+
+  // Create a pulsing, motivational beat using Web Audio API
+  function createKick(time) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.setValueAtTime(150, time);
+    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.3);
+    gain.gain.setValueAtTime(1, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.3);
+    osc.start(time);
+    osc.stop(time + 0.3);
+    musicNodes.push(osc, gain);
+  }
+
+  function createSnare(time) {
+    const bufferSize = audioCtx.sampleRate * 0.1;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    const source = audioCtx.createBufferSource();
+    const gain = audioCtx.createGain();
+    const filter = audioCtx.createBiquadFilter();
+    source.buffer = buffer;
+    filter.type = 'highpass';
+    filter.frequency.value = 1000;
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    gain.gain.setValueAtTime(0.3, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+    source.start(time);
+    source.stop(time + 0.1);
+    musicNodes.push(source, gain, filter);
+  }
+
+  function createBaseLine(time, freq) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.setValueAtTime(freq, time);
+    gain.gain.setValueAtTime(0.08, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + beatLen * 0.8);
+    osc.start(time);
+    osc.stop(time + beatLen * 0.8);
+    musicNodes.push(osc, gain);
+  }
+
+  const bassNotes = [55, 55, 73, 82, 55, 55, 73, 110];
+  let beatCount = 0;
+
+  function scheduleBeats() {
+    if (!musicPlaying) return;
+    const t = audioCtx.currentTime + 0.05;
+    const beat = beatCount % 8;
+
+    // Kick on 1 and 3
+    if (beat === 0 || beat === 4) createKick(t);
+    // Snare on 2 and 4
+    if (beat === 2 || beat === 6) createSnare(t);
+    // Bass line
+    createBaseLine(t, bassNotes[beat]);
+
+    beatCount++;
+    if (musicPlaying) setTimeout(scheduleBeats, beatLen * 500);
+  }
+
+  scheduleBeats();
+}
+
+function toggleMusic() {
+  const btn = document.getElementById('musicBtn');
+  const label = document.getElementById('musicLabel');
+
+  if (!musicPlaying) {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    musicPlaying = true;
+    btn.classList.add('playing');
+    label.textContent = 'PLAYING';
+    createWorkoutMusic();
+  } else {
+    musicPlaying = false;
+    btn.classList.remove('playing');
+    label.textContent = 'PLAY MUSIC';
+    musicNodes.forEach(n => { try { n.disconnect(); } catch(e){} });
+    musicNodes = [];
+  }
+}
+
+// ===================== BMI CALCULATOR =====================
+function calculateBMI() {
+  const name = document.getElementById('userName').value.trim();
+  const age = parseFloat(document.getElementById('userAge').value);
+  const height = parseFloat(document.getElementById('userHeight').value);
+  const weight = parseFloat(document.getElementById('userWeight').value);
+  const gender = document.getElementById('userGender').value;
+
+  if (!height || !weight) { alert('Please enter your height and weight!'); return; }
+
+  const heightM = height / 100;
+  const bmi = weight / (heightM * heightM);
+
+  // Ideal weight (BMI 18.5–24.9)
+  const idealMin = Math.round(18.5 * heightM * heightM);
+  const idealMax = Math.round(24.9 * heightM * heightM);
+
+  // TDEE estimate (Mifflin-St Jeor, moderate activity)
+  let bmr;
+  if (gender === 'male') {
+    bmr = 10 * weight + 6.25 * height - 5 * (age || 25) + 5;
+  } else {
+    bmr = 10 * weight + 6.25 * height - 5 * (age || 25) - 161;
+  }
+  const tdee = Math.round(bmr * 1.55); // moderate activity
+
+  // BMI Category
+  let cat, catColor;
+  if (bmi < 18.5) { cat = 'UNDERWEIGHT'; catColor = '#00d4ff'; }
+  else if (bmi < 25) { cat = 'NORMAL'; catColor = '#22c55e'; }
+  else if (bmi < 30) { cat = 'OVERWEIGHT'; catColor = '#f59e0b'; }
+  else { cat = 'OBESE'; catColor = '#ff4d1a'; }
+
+  document.getElementById('bmiValue').textContent = bmi.toFixed(1);
+  document.getElementById('bmiValue').style.color = catColor;
+  document.getElementById('bmiCat').textContent = cat;
+  document.getElementById('bmiCat').style.background = catColor + '20';
+  document.getElementById('bmiCat').style.color = catColor;
+  document.getElementById('bmiCat').style.border = '1px solid ' + catColor;
+  document.getElementById('idealWeight').textContent = idealMin + '–' + idealMax + ' kg';
+  document.getElementById('tdeeValue').textContent = tdee + ' kcal';
+  document.getElementById('greetName').textContent = name ? name.toUpperCase() : 'ATHLETE';
+
+  document.getElementById('bmiResult').style.display = 'block';
+  document.getElementById('weightGoalSection').style.display = 'block';
+
+  // Store TDEE and weight for goal calc
+  window._userTDEE = tdee;
+  window._userWeight = weight;
+}
+
+function calcWeightGoal() {
+  const target = parseFloat(document.getElementById('targetWeight').value);
+  const current = window._userWeight || parseFloat(document.getElementById('userWeight').value);
+  const months = parseInt(document.getElementById('goalTimeline').value);
+  const tdee = window._userTDEE || 2500;
+
+  if (!target) { alert('Enter your target weight!'); return; }
+  if (target <= current) { alert('Target weight should be higher than current weight for a gain plan.'); return; }
+
+  const toGain = (target - current).toFixed(1);
+  const weeks = months * 4.33;
+  const weeklyGain = (toGain / weeks).toFixed(2);
+  const dailySurplus = Math.round(weeklyGain * 7700 / 7);
+  const dailyCalories = tdee + dailySurplus;
+  const protein = Math.round(target * 1.8);
+
+  let training;
+  if (months <= 3) training = '5–6 days/week, progressive overload';
+  else if (months <= 6) training = '4–5 days/week, compound focus';
+  else training = '3–4 days/week, consistent progression';
+
+  document.getElementById('planGain').textContent = toGain + ' kg';
+  document.getElementById('planTime').textContent = months + ' months (' + Math.round(weeks) + ' weeks)';
+  document.getElementById('planWeekly').textContent = weeklyGain + ' kg/week';
+  document.getElementById('planCalories').textContent = '+' + dailySurplus + ' kcal/day (' + dailyCalories + ' kcal total)';
+  document.getElementById('planProtein').textContent = protein + 'g/day (' + Math.round(protein/target*10)/10 + 'g per kg bodyweight)';
+  document.getElementById('planTraining').textContent = training;
+
+  document.getElementById('goalPlan').style.display = 'block';
+  document.getElementById('goalPlan').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ===================== MUSCLE TARGET FILTER =====================
+const muscleKeywords = {
+  chest: ['chest', 'pectoral', 'pec'],
+  back: ['back', 'lat', 'lats', 'row', 'pull', 'rhomboid', 'trap'],
+  shoulders: ['shoulder', 'delt', 'deltoid', 'ohp', 'press'],
+  biceps: ['bicep', 'curl', 'arm'],
+  triceps: ['tricep', 'pushdown', 'extension', 'dip', 'skull'],
+  quads: ['quad', 'squat', 'lunge', 'leg press', 'leg extension'],
+  hamstrings: ['hamstring', 'rdl', 'romanian', 'deadlift', 'leg curl'],
+  glutes: ['glute', 'hip thrust', 'booty', 'deadlift', 'lunge'],
+  calves: ['calf', 'calves', 'gastrocnemius', 'soleus'],
+  core: ['core', 'abs', 'abdominis', 'plank', 'crunch', 'oblique'],
+  cardio: ['cardio', 'running', 'cycling', 'jump rope', 'burpee'],
+  fullbody: ['full body', 'clean', 'kettlebell', 'burpee', 'power']
+};
+
+function showTargetExercises(btn) {
+  document.querySelectorAll('.target-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const target = btn.getAttribute('data-target');
+  const keywords = muscleKeywords[target] || [target];
+  const titleMap = {
+    chest:'CHEST', back:'BACK & LATS', shoulders:'SHOULDERS',
+    biceps:'BICEPS', triceps:'TRICEPS', quads:'QUADS',
+    hamstrings:'HAMSTRINGS', glutes:'GLUTES', calves:'CALVES',
+    core:'CORE & ABS', cardio:'CARDIO', fullbody:'FULL BODY'
+  };
+
+  const allCards = document.querySelectorAll('.exercise-card');
+  const grid = document.getElementById('filteredGrid');
+  grid.innerHTML = '';
+
+  allCards.forEach(card => {
+    const muscles = (card.getAttribute('data-muscles') || '').toLowerCase();
+    const search = (card.getAttribute('data-search') || '').toLowerCase();
+    const name = (card.querySelector('.card-name')?.textContent || '').toLowerCase();
+    const combined = muscles + ' ' + search + ' ' + name;
+
+    const match = keywords.some(kw => combined.includes(kw.toLowerCase()));
+    if (match) {
+      const clone = card.cloneNode(true);
+      clone.style.opacity = '1';
+      clone.style.transform = 'translateY(0)';
+      grid.appendChild(clone);
+    }
+  });
+
+  document.getElementById('filteredTitle').textContent = 'EXERCISES FOR ' + (titleMap[target] || target.toUpperCase());
+  const section = document.getElementById('filteredExercises');
+  section.style.display = 'block';
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ===================== SIDEBAR MUSCLE FILTER =====================
+function filterByMuscle(btn) {
+  document.querySelectorAll('.muscle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const muscle = btn.getAttribute('data-muscle');
+  if (!muscle) { clearMuscleFilter(btn); return; }
+
+  const allCards = document.querySelectorAll('.exercise-card');
+  allCards.forEach(card => {
+    const muscles = (card.getAttribute('data-muscles') || '').toLowerCase();
+    const search = (card.getAttribute('data-search') || '').toLowerCase();
+    const combined = muscles + ' ' + search;
+
+    const keywords = muscleKeywords[muscle] || [muscle];
+    const match = keywords.some(kw => combined.includes(kw));
+    card.style.display = match ? '' : 'none';
+  });
+
+  document.querySelectorAll('.section').forEach(section => {
+    const visible = [...section.querySelectorAll('.exercise-card')].some(c => c.style.display !== 'none');
+    section.style.display = visible ? '' : 'none';
+  });
+}
+
+function clearMuscleFilter(btn) {
+  document.querySelectorAll('.muscle-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.exercise-card').forEach(c => c.style.display = '');
+  document.querySelectorAll('.section').forEach(s => s.style.display = '');
+}
+
+// ===================== SEARCH =====================
+document.getElementById('searchInput').addEventListener('input', function() {
+  const query = this.value.toLowerCase().trim();
+  const allCards = document.querySelectorAll('.exercise-card');
+
+  allCards.forEach(card => {
+    const searchData = card.getAttribute('data-search') || '';
+    const name = card.querySelector('.card-name')?.textContent?.toLowerCase() || '';
+    const desc = card.querySelector('.card-desc')?.textContent?.toLowerCase() || '';
+    const muscles = card.getAttribute('data-muscles') || '';
+
+    const visible = !query || searchData.includes(query) || name.includes(query) || desc.includes(query) || muscles.includes(query);
+    card.style.display = visible ? '' : 'none';
+  });
+
+  document.querySelectorAll('.section').forEach(section => {
+    const anyVisible = [...section.querySelectorAll('.exercise-card')].some(c => c.style.display !== 'none');
+    section.style.display = anyVisible || !query ? '' : 'none';
+  });
+});
+
+// ===================== SCROLL ANIMATIONS =====================
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.exercise-card').forEach(card => {
+  observer.observe(card);
+});
+</script>
+</body>
+</html>
